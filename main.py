@@ -1,5 +1,13 @@
 from flask import Flask, render_template, request
 import requests as rq
+import smtplib
+
+def send_email():
+    with open (smtplib.SMTP('smtp.gmail.com',587)) as connection:
+        connection.starttls()  # Secure the connection
+        connection.login(username, password)  # Log in to the server
+    
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -38,6 +46,8 @@ def blog(post_id):
     # Fetch the specific post
     blog_post = blog_posts[post_id]  # Assuming `post_id` matches the index in the list
     return render_template('post.html', blog_post=blog_post)
+
+
 
 if __name__== "__main__":
     app.run(debug=True)
