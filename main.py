@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import requests as rq
 app = Flask(__name__)
 
@@ -11,6 +11,18 @@ def home():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+# SOLUTION to Challenge:
+@app.route("/form-entry", methods=["POST"])
+def receive_data():
+    data = request.form
+    print(data["name"])
+    print(data["email"])
+    print(data["phone"])
+    print(data["message"])
+    return "<h1>Successfully sent your message</h1>"
+
+
 
 @app.route('/about')
 def about():
