@@ -12,16 +12,17 @@ def home():
 def contact():
     return render_template('contact.html')
 
-# SOLUTION to Challenge:
-@app.route("/form-entry", methods=["POST"])
+@app.route("/form-entry", methods=['GET', 'POST'])
 def receive_data():
-    data = request.form
-    print(data["name"])
-    print(data["email"])
-    print(data["phone"])
-    print(data["message"])
-    return "<h1>Successfully sent your message</h1>"
 
+    if request.method == 'POST':
+        data = request.form
+        print(data["name"])
+        print(data["email"])
+        print(data["phone"])
+        print(data["message"])
+        return "<h1>Successfully sent your message</h1>"
+    return render_template('contact.html')
 
 
 @app.route('/about')
