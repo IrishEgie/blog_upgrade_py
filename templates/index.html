@@ -21,32 +21,57 @@
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <!-- Post preview-->
-                                       
-                    {%for blog_post in posts:%}
+                    {% for blog_post in posts %}
                     <div class="post-preview">
-                        <a href="{{url_for('blog', post_id=blog_post.id)}}">
-                            <h2 class="post-title">{{blog_post.title}}</h2>
-                            <h3 class="post-subtitle">{{blog_post.subtitle}}</h3>
+                        <a href="{{ url_for('blog', post_id=blog_post.id) }}">
+                            <h2 class="post-title">{{ blog_post.title }}</h2>
+                            <h3 class="post-subtitle">{{ blog_post.subtitle }}</h3>
                         </a>
                         <p class="post-meta">
                             Posted by
-                            <a href="{{url_for('home')}}">{{blog_post.author}}</a>
-                            on {{blog_post.date}}
+                            <a href="{{ url_for('home') }}">{{ blog_post.author }}</a>
+                            on {{ blog_post.date }}
+                            {% set delete_url = 'delete_post' %}
+                            <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl('{{ url_for(delete_url, post_id=blog_post.id) }}')">✘</a>
                         </p>
                     </div>
-                    {%endfor%}
+                    {% endfor %}
 
                     <!-- Divider-->
                     <hr class="my-4" />
                     <!-- Pager-->
                     <div class="d-flex justify-content-end mb-4">
-                        <a class="btn btn-primary text-uppercase" href="{{ url_for('manage_post') }}">Create Post →</a>
+                        <a class="btn btn-primary text-uppercase" href="{{ url_for('manage_post') }}">Create Post</a>
                     </div>
-                    
                 </div>
             </div>
         </div>
-        {% include 'footer.html' %}
 
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this post? This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <a id="confirmDelete" class="btn btn-danger" href="#">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function setDeleteUrl(url) {
+                document.getElementById('confirmDelete').setAttribute('href', url);
+            }
+        </script>
+
+        {% include 'footer.html' %}
     </body>
 </html>

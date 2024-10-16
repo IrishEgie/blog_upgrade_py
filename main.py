@@ -143,6 +143,13 @@ def manage_post(post_id=None):
 
     return render_template('manage_posts.html', form=form, blog_post=blog_post)
 
+@app.route("/delete/<int:post_id>")
+def delete_post(post_id):
+    post_to_delete = BlogPost.query.get_or_404(post_id)
+    db.session.delete(post_to_delete)
+    db.session.commit()
+    return redirect(url_for('home'))
+
 
 if __name__== "__main__":
     app.run(debug=True)
