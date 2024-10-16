@@ -4,13 +4,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, TextAreaField, SubmitField
 from wtforms.validators import DataRequired, URL
 from flask_ckeditor import CKEditor, CKEditorField
 from datetime import date
-import requests as rq
 import smtplib
 import os
+
 
 user_email = os.getenv('EMAIL')
 user_pass = os.getenv('PASSWORD')
@@ -44,6 +44,17 @@ class Base(DeclarativeBase):
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
+
+
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    subtitle = StringField('Subtitle', validators=[DataRequired()])
+    date = StringField('Date', validators=[DataRequired()])
+    body = TextAreaField('Body', validators=[DataRequired()])
+    author = StringField('Author', validators=[DataRequired()])
+    img_url = StringField('Image URL', validators=[DataRequired()])
+    submit = SubmitField('Save Post')
 
 # CONFIGURE TABLE
 class BlogPost(db.Model):
@@ -99,6 +110,40 @@ def blog(post_id):
     return render_template('post.html', blog_post=blog_post)
 
 
+@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
+@app.route('/post', methods=['GET', 'POST'])  # For creating a new post
+def manage_post(post_id=None):
+    # If post_id is provided, we are editing an existing post
+    if post_id:
+        blog_post = BlogPost.query.get_or_404(post_id)
+    else:
+        blog_post = None
+
+    form = PostForm(obj=blog_post)  # Prepopulate the form if editing
+
+    if form.validate_on_submit():
+        if blog_post:  # Editing an existing post
+            blog_post.title = form.title.data
+            blog_post.subtitle = form.subtitle.data
+            blog_post.date = form.date.data
+            blog_post.body = form.body.data
+            blog_post.author = form.author.data
+            blog_post.img_url = form.img_url.data
+        else:  # Creating a new post
+            new_post = BlogPost(
+                title=form.title.data,
+                subtitle=form.subtitle.data,
+                date=form.date.data,
+                body=form.body.data,
+                author=form.author.data,
+                img_url=form.img_url.data
+            )
+            db.session.add(new_post)
+        
+        db.session.commit()
+        return redirect(url_for('home'))  # Redirect after creation or edit
+
+    return render_template('edit_post.html', form=form, blog_post=blog_post)
 
 
 if __name__== "__main__":
