@@ -31,11 +31,7 @@
                     <!-- Edit Button-->
                     <div class="d-flex justify-content-end mb-4">
                         <!-- TODO: Editing posts-->
-                        <a
-                          class="btn btn-primary float-right"
-                          href="TODO: Add code to edit_post here"
-                          >Edit Post</a
-                        >
+                        <a class="btn btn-primary float-right" href="{{ url_for('manage_post', post_id=blog_post.id) }}">Edit Post</a>
                       </div>
 
                 </div>

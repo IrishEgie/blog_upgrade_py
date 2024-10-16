@@ -45,8 +45,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
-
-
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     subtitle = StringField('Subtitle', validators=[DataRequired()])
@@ -69,7 +67,6 @@ class BlogPost(db.Model):
 
 with app.app_context():
     db.create_all()
-
 
 
 @app.route('/')
@@ -96,7 +93,6 @@ def contact():
 
         return render_template("contact.html", msg_sent=True)
     return render_template("contact.html", msg_sent=False)
-
 
 
 @app.route('/about')
@@ -143,7 +139,7 @@ def manage_post(post_id=None):
         db.session.commit()
         return redirect(url_for('home'))  # Redirect after creation or edit
 
-    return render_template('edit_post.html', form=form, blog_post=blog_post)
+    return render_template('manage_posts.html', form=form, blog_post=blog_post)
 
 
 if __name__== "__main__":
