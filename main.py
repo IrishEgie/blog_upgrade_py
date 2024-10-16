@@ -34,7 +34,7 @@ def send_email(sender_msg):
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRETE_KEY')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 Bootstrap5(app)
 
 
@@ -63,7 +63,7 @@ with app.app_context():
 
 @app.route('/')
 def home():
-
+    blog_posts = BlogPost.query.all()
     return render_template('index.html', posts=blog_posts)
 
 @app.route("/contact", methods=["GET", "POST"])
@@ -94,13 +94,10 @@ def about():
 
 @app.route('/blog/<int:post_id>')
 def blog(post_id):
-    response = rq.get('https://api.npoint.io/674f5423f73deab1e9a7')
-    response.raise_for_status()
-    blog_posts = response.json()  # Fetch again or cache it
-
-    # Fetch the specific post
-    blog_post = blog_posts[post_id]  # Assuming `post_id` matches the index in the list
+    # Query the database for a specific blog post by ID
+    blog_post = BlogPost.query.get_or_404(post_id)
     return render_template('post.html', blog_post=blog_post)
+
 
 
 

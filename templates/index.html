@@ -24,13 +24,13 @@
                                        
                     {%for blog_post in posts:%}
                     <div class="post-preview">
-                        <a href="{{url_for('blog', post_id=loop.index0)}}">
-                            <h2 class="post-title">{{blog_post['title']}}</h2>
-                            <h3 class="post-subtitle">{{blog_post['subtitle']}}</h3>
+                        <a href="{{url_for('blog', post_id=blog_post.id)}}">
+                            <h2 class="post-title">{{blog_post.title]}}</h2>
+                            <h3 class="post-subtitle">{{blog_post.subtitle}}</h3>
                         </a>
                         <p class="post-meta">
                             Posted by
-                            <a href="{{url_for('home')}}">Start Bootstrap</a>
+                            <a href="{{url_for('home')}}">{{blog_post.author}}</a>
                             on September 24, 2023
                         </p>
                     </div>
