@@ -2,7 +2,8 @@
 <html lang="en">
     {% include 'header.html' %}
     <!-- Page Header-->
-    {% set img_url = form.img_url.data if form.img_url.data else '' %}
+    {% set default_img = '/static/assets/img/post-bg.jpg' %}
+    {% set img_url = form.img_url.data if form.img_url.data else default_img %}
     <header class="masthead" style="background-image: url('{{ img_url }}')">
         <div class="container position-relative px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -18,7 +19,8 @@
     <article class="mb-4">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
-                <form method="POST" action="{{ url_for('manage_post', post_id=blog_post.id) if blog_post else url_for('create_post') }}">
+                <form method="POST" action="{{ url_for('manage_post', post_id=blog_post.id) if blog_post else url_for('manage_post') }}">
+                    {{ form.hidden_tag() }}  <!-- Add this line -->
                     <div class="form-group">
                         {{ form.title.label(class="form-label") }}
                         {{ form.title(class="form-control", value=blog_post.title if blog_post else '') }}
@@ -43,7 +45,7 @@
                         {{ form.img_url.label(class="form-label") }}
                         {{ form.img_url(class="form-control", value=blog_post.img_url if blog_post else '') }}
                     </div>
-                    <button type="submit" class="btn btn-primary">Save Post</button>
+                    <button type="submit" class="btn btn-primary mt-4">Save Post</button>
                 </form>
             </div>
         </div>
