@@ -36,6 +36,8 @@ def send_email(sender_msg):
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 Bootstrap5(app)
+app.config['CKEDITOR_PKG_TYPE'] = 'full'
+ckeditor = CKEditor(app)
 
 
 # CREATE DATABASE

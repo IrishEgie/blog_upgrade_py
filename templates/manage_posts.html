@@ -35,9 +35,12 @@
                     </div>
                     <div class="form-group">
                         {{ form.body.label(class="form-label") }}
-                        {{ form.body(class="form-control", value=blog_post.body if blog_post else '', rows=5) }}
+                        {{ form.body(class="form-control", value=blog_post.body if blog_post else '', rows=15) }}
                     </div>
                     <div class="form-group">
+                        {{ ckeditor.load() }}
+                        {{ ckeditor.config(name='body') }}
+
                         {{ form.author.label(class="form-label") }}
                         {{ form.author(class="form-control", value=blog_post.author if blog_post else '') }}
                     </div>
@@ -50,6 +53,7 @@
             </div>
         </div>
     </article>
+
     <!-- Footer-->
     {% include 'footer.html' %}
 </html>
