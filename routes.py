@@ -1,12 +1,13 @@
 from flask import flash, render_template, redirect, url_for, request
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 from app import app, db, login_manager
 from models import BlogPost, User
 from forms import LoginForm, PostForm, RegistrationForm
 from email_utils import send_email
-from werkzeug.security import check_password_hash 
+from sqlalchemy.exc import IntegrityError
 #--------------------------------------- Home #--------------------------------------- #
 @app.route('/')
+@login_required  
 def home():
     bg_image_url = '/static/assets/img/home-bg.jpg'
     main_heading = 'Clean Blog'
@@ -41,6 +42,7 @@ def blog(post_id):
 
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @app.route('/post', methods=['GET', 'POST'])  # For creating a new post
+@login_required  
 def manage_post(post_id=None):
     blog_post = BlogPost.query.get_or_404(post_id) if post_id else None
     form = PostForm(obj=blog_post)
@@ -70,6 +72,7 @@ def manage_post(post_id=None):
     return render_template('manage_posts.html', form=form, blog_post=blog_post)
 
 @app.route("/delete/<int:post_id>")
+@login_required  
 def delete_post(post_id):
     post_to_delete = BlogPost.query.get_or_404(post_id)
     db.session.delete(post_to_delete)
@@ -92,10 +95,16 @@ def register():
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Your account has been created! You can now log in.', 'success')
-        return redirect(url_for('home'))
+        
+        try:
+            db.session.add(user)
+            db.session.commit()
+            flash('Your account has been created! You can now log in.', 'success')
+            return redirect(url_for('home'))
+        except IntegrityError:
+            db.session.rollback()  # Rollback the session on error
+            flash('Email address already exists. Please use a different email.', 'danger')
+
     return render_template('nav/register.html', form=form, bg_image_url=bg_image_url, main_heading=main_heading, sub_heading=sub_heading)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -119,7 +128,9 @@ def login():
 
     return render_template('nav/login.html', form=form, main_heading=main_heading, sub_heading=sub_heading, bg_image_url=bg_image_url)
 
-
+@login_manager.unauthorized_handler
+def unauthorized():
+    return redirect(url_for('login'))  # Redirect to login page if unauthorized
 
 @app.route('/logout')
 @login_required
