@@ -2,7 +2,7 @@ from flask import flash, render_template, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user
 from app import app, db, login_manager
 from models import BlogPost, User
-from forms import PostForm, RegistrationForm
+from forms import LoginForm, PostForm, RegistrationForm
 from email_utils import send_email
 from werkzeug.security import check_password_hash 
 #--------------------------------------- Home #--------------------------------------- #
@@ -103,9 +103,11 @@ def login():
     main_heading = 'Login'
     sub_heading = 'Access your account'
     bg_image_url = 'https://www.loginradius.com/blog/static/25f482319c5c4fcb1749a8c424a007b0/d3746/login-authentication.jpg'
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+    
+    form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
         
         user = User.query.filter_by(email=email).first()
         if user and user.check_password(password):
@@ -115,7 +117,8 @@ def login():
         else:
             flash('Invalid email or password. Please try again.', 'danger')
 
-    return render_template('nav/login.html', main_heading=main_heading, sub_heading=sub_heading,  bg_image_url=bg_image_url)
+    return render_template('nav/login.html', form=form, main_heading=main_heading, sub_heading=sub_heading, bg_image_url=bg_image_url)
+
 
 
 @app.route('/logout')
