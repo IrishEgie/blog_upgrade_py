@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     {% include 'base/header.html' %}
+    {% include 'base/modal.html' %}
     <body>
 
         {% include 'base/hero.html' %}
@@ -20,7 +21,8 @@
                             <a href="{{ url_for('home') }}">{{ blog_post.author }}</a>
                             on {{ blog_post.date }}
                             {% set delete_url = 'delete_post' %}
-                            <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl('{{ url_for(delete_url, post_id=blog_post.id) }}')">✘</a>
+                            <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#actionModal" onclick="setupDeleteModal('{{ url_for(delete_url, post_id=blog_post.id) }}')">✘</a>
+
                         </p>
                     </div>
                     {% endfor %}
@@ -34,6 +36,8 @@
                 </div>
             </div>
         </div>
+
+        {% include 'base/modal.html' %}
         {% include 'base/footer.html' %}
     </body>
 </html>
