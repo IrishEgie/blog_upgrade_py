@@ -1,9 +1,10 @@
 from flask import flash, render_template, redirect, url_for, request
-from app import app, db
+from flask_login import login_required, login_user, logout_user
+from app import app, db, login_manager
 from models import BlogPost, User
 from forms import PostForm, RegistrationForm
 from email_utils import send_email
-
+from werkzeug.security import check_password_hash 
 #--------------------------------------- Home #--------------------------------------- #
 @app.route('/')
 def home():
@@ -76,6 +77,10 @@ def delete_post(post_id):
     return redirect(url_for('home'))
 
 #--------------------------------------- Auth Route ---------------------------------------- #
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -91,4 +96,36 @@ def register():
         db.session.commit()
         flash('Your account has been created! You can now log in.', 'success')
         return redirect(url_for('home'))
-    return render_template('register.html', form=form, bg_image_url=bg_image_url, main_heading=main_heading, sub_heading=sub_heading)
+    return render_template('nav/register.html', form=form, bg_image_url=bg_image_url, main_heading=main_heading, sub_heading=sub_heading)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    main_heading = 'Login'
+    sub_heading = 'Access your account'
+    bg_image_url = 'https://www.loginradius.com/blog/static/25f482319c5c4fcb1749a8c424a007b0/d3746/login-authentication.jpg'
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        user = User.query.filter_by(email=email).first()
+        if user and user.check_password(password):
+            login_user(user)
+            flash('Login successful!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Invalid email or password. Please try again.', 'danger')
+
+    return render_template('nav/login.html', main_heading=main_heading, sub_heading=sub_heading,  bg_image_url=bg_image_url)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('home'))
+
+@app.route('/protected')
+@login_required
+def protected():
+    return render_template('protected.html')

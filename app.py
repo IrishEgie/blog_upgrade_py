@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap5
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_ckeditor import CKEditor
 import os
@@ -9,6 +10,9 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 Bootstrap5(app)
 ckeditor = CKEditor(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+
 
 db = SQLAlchemy(app)
 

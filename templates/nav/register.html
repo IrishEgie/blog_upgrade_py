@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-    {% set default_img = '/static/assets/img/post-bg.jpg' %}
     {% include 'base/header.html' %}
     {% include 'base/hero.html' %}
     <div class="container">
@@ -22,7 +21,7 @@
                 {{ form.confirm_password.label(class="form-label") }}
                 {{ form.confirm_password(class="form-control") }}
             </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary mt-3 mb-3">Register</button>
         </form>
     </div>
     {% include 'base/footer.html' %}
