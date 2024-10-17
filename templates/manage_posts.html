@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    {% include 'header.html' %}
+    {% include 'base/header.html' %}
     <!-- Page Header-->
     {% set default_img = '/static/assets/img/post-bg.jpg' %}
     {% set img_url = form.img_url.data if form.img_url.data else default_img %}
@@ -55,5 +55,5 @@
     </article>
 
     <!-- Footer-->
-    {% include 'footer.html' %}
+    {% include 'base/footer.html' %}
 </html>

@@ -93,13 +93,13 @@ def contact():
         print(sender_msg)
         send_email(sender_msg=sender_msg)
 
-        return render_template("contact.html", msg_sent=True)
-    return render_template("contact.html", msg_sent=False)
+        return render_template("nav/contact.html", msg_sent=True)
+    return render_template("nav/contact.html", msg_sent=False)
 
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('nav/about.html')
 
 @app.route('/blog/<int:post_id>')
 def blog(post_id):
