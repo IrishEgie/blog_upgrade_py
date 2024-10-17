@@ -1,6 +1,6 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text
-from .app import db  # Ensure you import db from the app module
+from app import db  # Use absolute import
 
 class Base(DeclarativeBase):
     pass
