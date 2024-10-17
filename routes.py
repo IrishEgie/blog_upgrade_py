@@ -1,14 +1,19 @@
-from flask import render_template, redirect, url_for, request
+from flask import flash, render_template, redirect, url_for, request
 from app import app, db
-from models import BlogPost
-from forms import PostForm
+from models import BlogPost, User
+from forms import PostForm, RegistrationForm
 from email_utils import send_email
 
+#--------------------------------------- Home #--------------------------------------- #
 @app.route('/')
 def home():
+    bg_image_url = '/static/assets/img/home-bg.jpg'
+    main_heading = 'Clean Blog'
+    sub_heading = 'A Blog Theme by Start Bootstrap'
     blog_posts = BlogPost.query.all()
-    return render_template('index.html', posts=blog_posts)
+    return render_template('index.html', posts=blog_posts, bg_image_url=bg_image_url, main_heading=main_heading, sub_heading=sub_heading)
 
+#--------------------------------------- Contacts #--------------------------------------- #
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
@@ -22,10 +27,12 @@ def contact():
         return render_template("nav/contact.html", msg_sent=True)
     return render_template("nav/contact.html", msg_sent=False)
 
+#--------------------------------------- About #--------------------------------------- #
 @app.route('/about')
 def about():
     return render_template('nav/about.html')
 
+#--------------------------------------- Manage Posts Route #--------------------------------------- #
 @app.route('/blog/<int:post_id>')
 def blog(post_id):
     blog_post = BlogPost.query.get_or_404(post_id)
@@ -67,3 +74,21 @@ def delete_post(post_id):
     db.session.delete(post_to_delete)
     db.session.commit()
     return redirect(url_for('home'))
+
+#--------------------------------------- Auth Route ---------------------------------------- #
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    bg_image_url = 'https://brynfest.com/wp-content/uploads/2021/03/Factors-to-Consider-Before-Registering-a-Limited-Company.png'
+    main_heading = 'Register'
+    sub_heading = 'Create an account, share your articulate thoughts'
+    
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your account has been created! You can now log in.', 'success')
+        return redirect(url_for('home'))
+    return render_template('register.html', form=form, bg_image_url=bg_image_url, main_heading=main_heading, sub_heading=sub_heading)
