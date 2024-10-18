@@ -1,6 +1,6 @@
 from flask import flash, render_template, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user, current_user
-from app import app, db, login_manager
+from app import app, db, login_manager, time_ago
 from models import BlogPost, Comment, User
 from forms import CommentForm, LoginForm, PostForm, RegistrationForm
 from email_utils import send_email
@@ -53,8 +53,8 @@ def blog(post_id):
 
     # Fetch all comments for the blog post
     comments = Comment.query.filter_by(post_id=blog_post.id).all()
-    return render_template('post.html', blog_post=blog_post, form=form, comments=comments)
-
+    comments_with_time_ago = [(comment, time_ago(comment.timestamp)) for comment in comments]
+    return render_template('post.html', blog_post=blog_post, form=form, comments=comments_with_time_ago)
 
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @app.route('/post', methods=['GET', 'POST'])  # For creating a new post
