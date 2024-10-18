@@ -17,6 +17,9 @@ def home():
 #--------------------------------------- Contacts #--------------------------------------- #
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
+    main_heading = 'Contact Me'
+    sub_heading = 'Have questions? I have answers.'
+    bg_image_url = '/static/assets/img/contact-bg.jpg'
     if request.method == "POST":
         data = request.form
         name = data['name']
@@ -25,13 +28,17 @@ def contact():
         message = data["message"]
         sender_msg = f"Name: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
         send_email(sender_msg=sender_msg)
-        return render_template("nav/contact.html", msg_sent=True)
-    return render_template("nav/contact.html", msg_sent=False)
+        return render_template("nav/contact.html", msg_sent=True, main_heading=main_heading, sub_heading=sub_heading, bg_image_url=bg_image_url)
+    return render_template("nav/contact.html", msg_sent=False, main_heading=main_heading, sub_heading=sub_heading, bg_image_url=bg_image_url)
 
 #--------------------------------------- About #--------------------------------------- #
 @app.route('/about')
 def about():
-    return render_template('nav/about.html')
+    main_heading = 'About Me'
+    sub_heading = 'This is what I do.'
+    bg_image_url = '/static/assets/img/about-bg.jpg'
+
+    return render_template('nav/about.html', main_heading=main_heading, sub_heading=sub_heading, bg_image_url=bg_image_url)
 
 #--------------------------------------- Manage Posts Route #--------------------------------------- #
 @app.route('/blog/<int:post_id>', methods=['GET', 'POST'])
@@ -177,6 +184,7 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('home'))
 
+#--------------------------------------- Error Route ---------------------------------------- #
 @app.errorhandler(404)
 def not_found(error):
     return handle_4xx_error(404, "Sorry, the page you are looking for does not exist.")

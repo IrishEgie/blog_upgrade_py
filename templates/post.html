@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     {% include 'base/header.html' %}
+    {% include 'components/modal.html' %}
     <!-- Page Header-->
     <header class="masthead" style="background-image: url('{{ blog_post.img_url }}')">
         <div class="container position-relative px-4 px-lg-5">
@@ -23,6 +24,7 @@
     <article class="mb-4">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
+                {% include 'base/flash_message.html' %}
                 <h2>{{ blog_post.title }}</h2>
                 <p>{{ blog_post.body | safe }}</p>
 
