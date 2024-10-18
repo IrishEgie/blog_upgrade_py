@@ -26,13 +26,12 @@
                     <h2>{{ blog_post.title }}</h2>
                     <p>{{ blog_post.body|safe }}</p>
 
-
-
                     <!-- Edit Button-->
                     <div class="d-flex justify-content-end mb-4">
-                        <!-- TODO: Editing posts-->
+                        {% if current_user.is_authenticated %}
                         <a class="btn btn-primary float-right" href="{{ url_for('manage_post', post_id=blog_post.id) }}">Edit Post</a>
-                      </div>
+                        {% endif %}
+                    </div>
 
                 </div>
             </div>

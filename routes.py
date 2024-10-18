@@ -7,7 +7,6 @@ from email_utils import send_email
 from sqlalchemy.exc import IntegrityError
 #--------------------------------------- Home #--------------------------------------- #
 @app.route('/')
-@login_required  
 def home():
     bg_image_url = '/static/assets/img/home-bg.jpg'
     main_heading = 'Clean Blog'
@@ -139,7 +138,3 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('home'))
 
-@app.route('/protected')
-@login_required
-def protected():
-    return render_template('protected.html')

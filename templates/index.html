@@ -31,7 +31,9 @@
                     <hr class="my-4" />
                     <!-- Pager-->
                     <div class="d-flex justify-content-end mb-4">
+                        {% if current_user.is_authenticated %}
                         <a class="btn btn-primary text-uppercase" href="{{ url_for('manage_post') }}">Create Post</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
