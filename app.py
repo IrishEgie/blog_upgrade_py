@@ -20,36 +20,6 @@ from routes import *
 from models import *
 
 
-from datetime import datetime, timedelta
-
-def time_ago(timestamp):
-    now = datetime.utcnow()
-    diff = now - timestamp
-
-    if diff < timedelta(minutes=1):
-        return "just now"
-    elif diff < timedelta(hours=1):
-        minutes = diff.seconds // 60
-        return f"{minutes} minute{'s' if minutes != 1 else ''} ago"
-    elif diff < timedelta(days=1):
-        hours = diff.seconds // 3600
-        return f"{hours} hour{'s' if hours != 1 else ''} ago"
-    elif diff < timedelta(weeks=1):
-        days = diff.days
-        return f"{days} day{'s' if days != 1 else ''} ago"
-    elif diff < timedelta(days=30):
-        weeks = diff.days // 7
-        return f"{weeks} week{'s' if weeks != 1 else ''} ago"
-    elif diff < timedelta(days=365):
-        months = diff.days // 30
-        month_str = (timestamp.strftime("%B"))  # Full month name
-        year_str = timestamp.strftime("%Y")  # Year
-        return f"{month_str} {year_str}"
-    else:
-        year_str = timestamp.strftime("%Y")  # Year
-        return f"{year_str}"
-
-
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()

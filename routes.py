@@ -1,9 +1,9 @@
 from flask import flash, render_template, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user, current_user
-from app import app, db, login_manager, time_ago
+from app import app, db, login_manager
 from models import BlogPost, Comment, User
 from forms import CommentForm, LoginForm, PostForm, RegistrationForm
-from email_utils import send_email
+from utils import send_email, time_ago
 from sqlalchemy.exc import IntegrityError
 #--------------------------------------- Home #--------------------------------------- #
 @app.route('/')
