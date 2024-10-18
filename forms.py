@@ -23,3 +23,8 @@ class PostForm(FlaskForm):
     body = CKEditorField('Body', validators=[DataRequired()])  # Use CKEditorField for rich text
     img_url = StringField('Image URL', validators=[DataRequired()])
     submit = SubmitField('Save Post')
+
+
+class CommentForm(FlaskForm):
+    comment = CKEditorField('Comment', validators=[DataRequired()])
+    submit = SubmitField('Submit Comment')

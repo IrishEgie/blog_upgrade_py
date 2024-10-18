@@ -1,8 +1,8 @@
 from flask import flash, render_template, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user, current_user
 from app import app, db, login_manager
-from models import BlogPost, User
-from forms import LoginForm, PostForm, RegistrationForm
+from models import BlogPost, Comment, User
+from forms import CommentForm, LoginForm, PostForm, RegistrationForm
 from email_utils import send_email
 from sqlalchemy.exc import IntegrityError
 #--------------------------------------- Home #--------------------------------------- #
@@ -34,10 +34,22 @@ def about():
     return render_template('nav/about.html')
 
 #--------------------------------------- Manage Posts Route #--------------------------------------- #
-@app.route('/blog/<int:post_id>')
+@app.route('/blog/<int:post_id>', methods=['GET', 'POST'])
 def blog(post_id):
     blog_post = BlogPost.query.get_or_404(post_id)
-    return render_template('post.html', blog_post=blog_post)
+    form = CommentForm()  # Create an instance of CommentForm
+
+    if form.validate_on_submit():
+        new_comment = Comment(
+            body=form.comment.data,
+            post_id=blog_post.id,
+            author_id=current_user.id  # Assuming you want to link the comment to the current user
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+        return redirect(url_for('blog', post_id=blog_post.id))  # Redirect back to the post
+
+    return render_template('post.html', blog_post=blog_post, form=form)  # Pass the form to the template
 
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @app.route('/post', methods=['GET', 'POST'])  # For creating a new post
@@ -70,6 +82,25 @@ def manage_post(post_id=None):
         return redirect(url_for('home'))
 
     return render_template('manage_posts.html', form=form, blog_post=blog_post)
+
+@app.route('/post/<int:post_id>/comment', methods=['POST'])
+@login_required  # Ensure only logged-in users can comment
+def add_comment(post_id):
+    blog_post = BlogPost.query.get_or_404(post_id)
+    form = CommentForm()
+
+    if form.validate_on_submit():
+        new_comment = Comment(
+            body=form.comment.data,
+            post_id=blog_post.id,
+            author_id=current_user.id  # Assuming you want to link the comment to the current user
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+        return redirect(url_for('blog', post_id=blog_post.id))  # Redirect back to the post
+
+    # If validation fails, redirect back (you could also flash an error message)
+    return redirect(url_for('blog', post_id=blog_post.id))
 
 
 @app.route("/delete/<int:post_id>")
