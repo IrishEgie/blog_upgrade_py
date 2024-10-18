@@ -34,12 +34,7 @@
                 </div>
 
                 <!-- Comment Form -->
-                <h3>Leave a Comment:</h3>
-                <form method="POST" action="{{ url_for('add_comment', post_id=blog_post.id) }}">
-                    {{ form.hidden_tag() }}
-                    {{ form.comment(class="form-control", rows=5) }}
-                    <button type="submit" class="btn btn-primary mt-2">Submit Comment</button>
-                </form>
+                {% include 'components/comments.html' %}
             </div>
         </div>
     </article>

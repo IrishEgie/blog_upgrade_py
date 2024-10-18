@@ -40,16 +40,21 @@ def blog(post_id):
     form = CommentForm()  # Create an instance of CommentForm
 
     if form.validate_on_submit():
-        new_comment = Comment(
-            body=form.comment.data,
-            post_id=blog_post.id,
-            author_id=current_user.id  # Assuming you want to link the comment to the current user
-        )
-        db.session.add(new_comment)
-        db.session.commit()
-        return redirect(url_for('blog', post_id=blog_post.id))  # Redirect back to the post
+        if current_user.is_authenticated:  # Ensure the user is authenticated
+            new_comment = Comment(
+                body=form.comment.data,
+                post_id=blog_post.id,
+                author_id=current_user.id  # Link the comment to the current user
+            )
+            db.session.add(new_comment)
+            db.session.commit()
+            flash('Your comment has been added!', 'success')  # Optional flash message
+            return redirect(url_for('blog', post_id=blog_post.id))  # Redirect back to the post
 
-    return render_template('post.html', blog_post=blog_post, form=form)  # Pass the form to the template
+    # Fetch all comments for the blog post
+    comments = Comment.query.filter_by(post_id=blog_post.id).all()
+    return render_template('post.html', blog_post=blog_post, form=form, comments=comments)
+
 
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @app.route('/post', methods=['GET', 'POST'])  # For creating a new post

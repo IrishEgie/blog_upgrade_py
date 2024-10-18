@@ -22,13 +22,17 @@ class BlogPost(db.Model):
     author: Mapped['User'] = relationship('User', back_populates='blog_posts')
 
 class Comment(db.Model):
+    __tablename__ = 'comment'  # Ensure you have a table name
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     post_id: Mapped[int] = mapped_column(Integer, ForeignKey('blog_post.id'), nullable=False)
     author_id: Mapped[int] = mapped_column(Integer, ForeignKey('user.id'), nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)  # Add this line
 
     post = relationship('BlogPost', back_populates='comments')
     author = relationship('User', back_populates='comments')
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
