@@ -138,3 +138,17 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('home'))
 
+@app.errorhandler(404)
+def not_found(error):
+    return handle_4xx_error(404, "Sorry, the page you are looking for does not exist.")
+
+@app.errorhandler(403)
+def forbidden(error):
+    return handle_4xx_error(403, "You do not have permission to access this page.")
+
+@app.errorhandler(400)
+def bad_request(error):
+    return handle_4xx_error(400, "Bad request. Please check your input.")
+
+def handle_4xx_error(code, message):
+    return render_template('errors/4xx.html', code=code, message=message), code
