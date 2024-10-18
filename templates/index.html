@@ -20,9 +20,10 @@
                             Posted by
                             <a href="{{ url_for('home') }}">{{ blog_post.author }}</a>
                             on {{ blog_post.date }}
+                            {% if current_user.is_authenticated %}
                             {% set delete_url = 'delete_post' %}
                             <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#actionModal" onclick="setupDeleteModal('{{ url_for(delete_url, post_id=blog_post.id) }}')">✘</a>
-
+                            {% endif %}
                         </p>
                     </div>
                     {% endfor %}
