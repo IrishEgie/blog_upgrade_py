@@ -3,11 +3,11 @@
     {% include 'base/header.html' %}
     {% include 'base/modal.html' %}
     <body>
-
         {% include 'base/hero.html' %}
         <!-- Main Content-->
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
+                {% include 'base/flash_message.html' %}
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <!-- Post preview-->
                     {% for blog_post in posts %}
@@ -18,7 +18,7 @@
                         </a>
                         <p class="post-meta">
                             Posted by
-                            <a href="{{ url_for('home') }}">{{ blog_post.author }}</a>
+                            <a href="{{ url_for('home') }}">{{ blog_post.author.username }}</a>
                             on {{ blog_post.date }}
                             {% if current_user.is_authenticated %}
                             {% set delete_url = 'delete_post' %}
@@ -40,7 +40,6 @@
             </div>
         </div>
 
-        {% include 'base/modal.html' %}
         {% include 'base/footer.html' %}
     </body>
 </html>

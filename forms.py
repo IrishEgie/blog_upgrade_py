@@ -20,7 +20,6 @@ class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     subtitle = StringField('Subtitle', validators=[DataRequired()])
     date = StringField('Date', validators=[DataRequired()])
-    body = TextAreaField('Body', validators=[DataRequired()])
-    author = StringField('Author', validators=[DataRequired()])
+    body = CKEditorField('Body', validators=[DataRequired()])  # Use CKEditorField for rich text
     img_url = StringField('Image URL', validators=[DataRequired()])
     submit = SubmitField('Save Post')

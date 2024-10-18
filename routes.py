@@ -52,23 +52,25 @@ def manage_post(post_id=None):
             blog_post.subtitle = form.subtitle.data
             blog_post.date = form.date.data
             blog_post.body = form.body.data
-            blog_post.author = form.author.data
             blog_post.img_url = form.img_url.data
+            # Author should be set from the current user
+            blog_post.author_id = current_user.id
         else:  # Creating a new post
             new_post = BlogPost(
                 title=form.title.data,
                 subtitle=form.subtitle.data,
                 date=form.date.data,
                 body=form.body.data,
-                author=form.author.data,
+                author_id=current_user.id,  # Correctly set the author_id
                 img_url=form.img_url.data
             )
             db.session.add(new_post)
-        
+
         db.session.commit()
         return redirect(url_for('home'))
 
     return render_template('manage_posts.html', form=form, blog_post=blog_post)
+
 
 @app.route("/delete/<int:post_id>")
 @login_required  
@@ -99,6 +101,7 @@ def register():
             db.session.add(user)
             db.session.commit()
             flash('Your account has been created! You can now log in.', 'success')
+            login_user(user)
             return redirect(url_for('home'))
         except IntegrityError:
             db.session.rollback()  # Rollback the session on error

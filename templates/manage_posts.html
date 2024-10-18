@@ -41,10 +41,6 @@
                         {{ ckeditor.load() }}
                         {{ ckeditor.config(name='body') }}
 
-                        {{ form.author.label(class="form-label") }}
-                        {{ form.author(class="form-control", value=blog_post.author if blog_post else '') }}
-                    </div>
-                    <div class="form-group">
                         {{ form.img_url.label(class="form-label") }}
                         {{ form.img_url(class="form-control", value=blog_post.img_url if blog_post else '') }}
                     </div>
