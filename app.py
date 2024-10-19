@@ -7,7 +7,7 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] =  os.getenv('DATABASE_URL', 'sqlite:///posts.db') 
 Bootstrap5(app)
 ckeditor = CKEditor(app)
 login_manager = LoginManager()
