@@ -40,7 +40,7 @@ class User(UserMixin, db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     username: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
-    password_hash: Mapped[str] = mapped_column(String(128), nullable=False)
+    password_hash: Mapped[str] = mapped_column(String(256), nullable=False)
 
     blog_posts: Mapped[list[BlogPost]] = relationship('BlogPost', back_populates='author')
     comments: Mapped[list[Comment]] = relationship('Comment', back_populates='author')
