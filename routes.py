@@ -9,8 +9,8 @@ from sqlalchemy.exc import IntegrityError
 @app.route('/')
 def home():
     bg_image_url = '/static/assets/img/home-bg.jpg'
-    main_heading = 'Clean Blog'
-    sub_heading = 'A Blog Theme by Start Bootstrap'
+    main_heading = 'Wanderings of the Mind'
+    sub_heading = 'A Blog by Ej Arao'
     blog_posts = BlogPost.query.all()
     return render_template('index.html', posts=blog_posts, bg_image_url=bg_image_url, main_heading=main_heading, sub_heading=sub_heading)
 
