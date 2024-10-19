@@ -20,7 +20,10 @@ from routes import *
 from models import *
 
 
-if __name__ == "__main__":
+def create_db():
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+
+if __name__ == "__main__":
+    create_db()  # Only run this when starting the app locally
+    app.run()
